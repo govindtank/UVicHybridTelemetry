@@ -67,7 +67,8 @@ public class DangerZone extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                Log.w("Debug",mqttMessage.toString());
+                //output message with topic
+                Log.w("Debug",mqttMessage.toString().concat(" " + topic));
                 dataReceived.setText(mqttMessage.toString());
             }
 

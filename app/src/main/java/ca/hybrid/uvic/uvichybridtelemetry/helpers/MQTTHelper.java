@@ -17,7 +17,7 @@ public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
     public String server_address = "tcp://test.mosquitto.org";
     final String clientId = "ExampleAndroidClient";
-    final String subscriptionTopic = "hybrid/+";
+    final String subscriptionTopic = "hybrid/#";
 
     final String username = "";
     final String password = "";
