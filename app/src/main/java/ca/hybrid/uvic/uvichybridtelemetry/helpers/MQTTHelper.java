@@ -15,7 +15,7 @@ import android.content.Context;
 public class MQTTHelper {
     //set basics
     public MqttAndroidClient mqttAndroidClient;
-    public String server_address = "test.mosquito.org";
+    public String server_address = "tcp://test.mosquitto.org";
     final String clientId = "ExampleAndroidClient";
     final String subscriptionTopic = "hybrid/+";
 
@@ -58,8 +58,8 @@ public class MQTTHelper {
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
-        mqttConnectOptions.setUserName(username);
-        mqttConnectOptions.setPassword(password.toCharArray());
+        //mqttConnectOptions.setUserName(username);
+        //mqttConnectOptions.setPassword(password.toCharArray());
 
         try {
 
