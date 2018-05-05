@@ -59,7 +59,6 @@ public class DangerZone extends AppCompatActivity {
     //starts mqtt
     private void startMqtt(){
         MQTTHelper helper = new MQTTHelper();
-        helper.MqttHelper(getApplicationContext());
         helper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
