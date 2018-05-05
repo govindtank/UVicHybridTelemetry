@@ -10,28 +10,77 @@ import android.view.MenuItem;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.content.Context;
 import android.widget.Toast;
 import android.content.SharedPreferences;
+import ca.hybrid.uvic.uvichybridtelemetry.helpers.MQTTHelper;
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import android.util.Log;
+import android.content.Context;
 
 public class DangerZone extends AppCompatActivity {
+
+    TextView dataReceived;
 
     public static final String MY_PREFS_NAME = "user_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //basic initialization.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danger_zone);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Context context = getApplicationContext();
+
+        //MQTT Bullshit
+        dataReceived = findViewById(R.id.dataReceived);
+        startMqtt();
+
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String restoredText = prefs.getString("server", null);
         if (restoredText != null) {
             int duration = Toast.LENGTH_SHORT;
-            Context context = getApplicationContext();
             Toast.makeText(context, "Server: " + restoredText, duration).show();
         }
+
+    }
+
+    //starts mqtt
+    private void startMqtt(){
+        MQTTHelper helper = new MQTTHelper();
+        helper.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean b, String s) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable throwable) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                Log.w("Debug",mqttMessage.toString());
+                dataReceived.setText(mqttMessage.toString());
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
     }
 
     @Override
