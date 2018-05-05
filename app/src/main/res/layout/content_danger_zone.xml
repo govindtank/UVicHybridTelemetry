@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_danger_zone">
 
     <TextView
-        android:id="@+id/dataReceived"
+        android:id="@+id/main_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
