@@ -133,7 +133,7 @@ public class DangerZone extends AppCompatActivity {
                 }
                 if(topic.equals("hybrid/engine/AFR")) {
                     afr_text.setText(String.valueOf(String.format("%.1f", data)));
-                    afr_gauge.setValue((int)data);
+                    afr_gauge.setValue((int)(data*10));
                     if (data<11) {
                         afr_gauge.setPointStartColor(Color.parseColor("#ffff00"));
                         afr_gauge.setPointEndColor(Color.parseColor("#ffff00"));
@@ -167,7 +167,7 @@ public class DangerZone extends AppCompatActivity {
                 }
                 if(topic.equals("hybrid/dash/GLVoltage")) {
                     String voltage = String.format("%.1f", data) + "V";
-                    voltage_gauge.setValue((int)data);
+                    voltage_gauge.setValue((int)(data*10));
                     voltage_text.setText(voltage);
                     if (data>14 || data<10) {
                         voltage_gauge.setPointStartColor(Color.parseColor("#ff00000"));
