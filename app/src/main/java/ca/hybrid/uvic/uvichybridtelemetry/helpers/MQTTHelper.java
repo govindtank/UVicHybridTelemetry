@@ -17,7 +17,7 @@ public class MQTTHelper {
     //default server we used for testing
     public String server_address = "tcp://test.mosquitto.org";
     //topic we are listening to through MQTT
-    final String subscriptionTopic = "hybrid/#";
+    final String[] subscriptionTopic = new String[] {"hybrid/engine/TPS","hybrid/engine/AFR","hybrid/dash/fuel","hybrid/dash/charge","hybrid/dash/GLVoltage"} ;
     //User/pass weren't aren't being used in our current usage case.
     final String username = "";
     final String password = "";
