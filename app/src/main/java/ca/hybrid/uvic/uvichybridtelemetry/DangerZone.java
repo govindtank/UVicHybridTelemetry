@@ -49,16 +49,16 @@ public class DangerZone extends AppCompatActivity {
         fuel_Data = findViewById(R.id.fuel);
         charge_Data = findViewById(R.id.charge);
 
+        //starts connection
         startMqtt();
 
-
+        //sets prefs and popup for current server.
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String restoredText = prefs.getString("server", null);
         if (restoredText != null) {
             int duration = Toast.LENGTH_SHORT;
             Toast.makeText(context, "Server: " + restoredText, duration).show();
         }
-
     }
 
     //starts mqtt
@@ -93,7 +93,7 @@ public class DangerZone extends AppCompatActivity {
                     throttle_Data.setText(tps);
                 }
                 if(topic.equals("hybrid/engine/AFR")) {
-                    AFR_Data.setText(String.valueOf(data));
+                    AFR_Data.setText(String.valueOf(String.format("%.0f", data)));
                 }
                 if(topic.equals("hybrid/dash/fuel")) {
                     String fuel = data + "%";
