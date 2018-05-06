@@ -24,12 +24,12 @@ import android.content.Context;
 
 public class DangerZone extends AppCompatActivity {
 
-    TextView dataReceived;
     TextView engineTempData;
     TextView AFR_Data;
     TextView throttle_Data;
     TextView fuel_Data;
     TextView charge_Data;
+    public String server_address;
 
     public static final String MY_PREFS_NAME = "user_prefs";
 
@@ -49,9 +49,6 @@ public class DangerZone extends AppCompatActivity {
         fuel_Data = findViewById(R.id.fuel);
         charge_Data = findViewById(R.id.charge);
 
-        //starts connection
-        startMqtt();
-
         //sets prefs and popup for current server.
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String restoredText = prefs.getString("server", null);
@@ -59,12 +56,18 @@ public class DangerZone extends AppCompatActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast.makeText(context, "Server: " + restoredText, duration).show();
         }
+
+        //grabs server address from prefs
+        server_address = prefs.getString("server", "tcp://test.mosquitto.org");
+        //starts connection
+        startMqtt();
     }
 
     //starts mqtt
     private void startMqtt(){
         MQTTHelper helper = new MQTTHelper();
-        helper.MqttHelper(getApplicationContext());
+        helper.MqttHelper(getApplicationContext(), "tcp://"+server_address);
+
         helper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
@@ -148,6 +151,8 @@ public class DangerZone extends AppCompatActivity {
                             SharedPreferences.Editor editor = getSharedPreferences("user_prefs", MODE_PRIVATE).edit();
                             editor.putString("server", editText.getText().toString());
                             editor.apply();
+                            server_address=editText.getText().toString();
+                            startMqtt();
                         }
                     })
                     .setNegativeButton("Cancel",

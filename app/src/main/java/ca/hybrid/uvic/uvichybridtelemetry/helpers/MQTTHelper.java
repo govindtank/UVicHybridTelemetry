@@ -23,7 +23,7 @@ public class MQTTHelper {
     final String password = "";
 
     //helper method.
-    public void MqttHelper(Context context){
+    public void MqttHelper(Context context, String server_address){
         mqttAndroidClient = new MqttAndroidClient(context, server_address, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override

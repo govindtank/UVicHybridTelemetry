@@ -22,4 +22,5 @@
 
     <include layout="@layout/content_danger_zone" />
 
+
 </android.support.design.widget.CoordinatorLayout>
