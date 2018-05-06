@@ -19,16 +19,26 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import android.util.Log;
+import pl.pawelkleczkowski.customgauge.CustomGauge;
+import android.graphics.Color;
 
 public class DangerZone extends AppCompatActivity {
 
     //place holder spots where incoming data will be stored
     //then used to set various UI elements, or passed to different classes.
-    TextView engineTempData;
-    TextView AFR_Data;
-    TextView throttle_Data;
-    TextView fuel_Data;
-    TextView charge_Data;
+    CustomGauge coolant_gauge;
+    CustomGauge afr_gauge;
+    CustomGauge throttle_gauge;
+    CustomGauge fuel_gauge;
+    CustomGauge charge_gauge;
+    CustomGauge voltage_gauge;
+    TextView coolant_text;
+    TextView afr_text;
+    TextView throttle_text;
+    TextView fuel_text;
+    TextView charge_text;
+    TextView voltage_text;
+
     public String server_address;
 
     public static final String MY_PREFS_NAME = "user_prefs";
@@ -43,11 +53,18 @@ public class DangerZone extends AppCompatActivity {
         Context context = getApplicationContext();
 
         //Set paths for incoming data.
-        engineTempData = findViewById(R.id.engine_temperature);
-        AFR_Data = findViewById(R.id.AFR);
-        throttle_Data = findViewById(R.id.TPS);
-        fuel_Data = findViewById(R.id.fuel);
-        charge_Data = findViewById(R.id.charge);
+        coolant_gauge = findViewById(R.id.coolantData);
+        coolant_text = findViewById(R.id.coolantText);
+        afr_gauge = findViewById(R.id.afrData);
+        afr_text = findViewById(R.id.afrText);
+        throttle_gauge = findViewById(R.id.tpsData);
+        throttle_text = findViewById(R.id.tpsText);
+        fuel_gauge = findViewById(R.id.fuelData);
+        fuel_text = findViewById(R.id.fuelText);
+        charge_gauge = findViewById(R.id.chargeData);
+        charge_text = findViewById(R.id.chargeText);
+        voltage_gauge = findViewById(R.id.voltageData);
+        voltage_text = findViewById(R.id.voltageText);
 
         // sets prefs location
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
@@ -92,22 +109,69 @@ public class DangerZone extends AppCompatActivity {
                 //checks topic from incoming message, then outputs it to the corresponding GUI element
                 if(topic.equals("hybrid/engine/temperature")) {
                     String engine = data + " F";
-                    engineTempData.setText(engine);
+                    //sets gauges
+                    coolant_gauge.setValue((int)data);
+                    coolant_text.setText(engine);
+                    if (data>187) {
+                        coolant_gauge.setPointEndColor(Color.parseColor("#ff0000"));
+                        coolant_gauge.setPointStartColor(Color.parseColor("#ff0000"));
+                    }
+                    if(data<186){
+                        coolant_gauge.setPointEndColor(Color.parseColor("#0000ff"));
+                        coolant_gauge.setPointStartColor(Color.parseColor("#0000ff"));
+                    }
                 }
                 if(topic.equals("hybrid/engine/TPS")) {
                     String tps = String.format("%.0f", data) + "%";
-                    throttle_Data.setText(tps);
+                    throttle_gauge.setValue((int)data);
+                    throttle_text.setText(tps);
                 }
                 if(topic.equals("hybrid/engine/AFR")) {
-                    AFR_Data.setText(String.valueOf(String.format("%.1f", data)));
+                    afr_text.setText(String.valueOf(String.format("%.1f", data)));
+                    afr_gauge.setValue((int)data);
+                    if (data<11) {
+                        afr_gauge.setPointStartColor(Color.parseColor("#ffff00"));
+                        afr_gauge.setPointEndColor(Color.parseColor("#ffff00"));
+                    }
+                    if (data>14.9) {
+                        afr_gauge.setPointStartColor(Color.parseColor("#ff00000"));
+                        afr_gauge.setPointEndColor(Color.parseColor("#ff0000"));
+                    }
+                    if (data>11.1 && data<14.8) {
+                        afr_gauge.setPointStartColor(Color.parseColor("#0000ff"));
+                        afr_gauge.setPointEndColor(Color.parseColor("#0000ff"));
+                    }
                 }
                 if(topic.equals("hybrid/dash/fuel")) {
                     String fuel = String.format("%.0f", data) + "%";
-                    fuel_Data.setText(fuel);
+                    fuel_text.setText(fuel);
+                    fuel_gauge.setValue((int)data);
+                    if (data<20) {
+                        fuel_gauge.setPointStartColor(Color.parseColor("#ffff00"));
+                        fuel_gauge.setPointEndColor(Color.parseColor("#ffff00"));
+                    }
+                    if (data>21) {
+                        fuel_gauge.setPointStartColor(Color.parseColor("#0000ff"));
+                        fuel_gauge.setPointEndColor(Color.parseColor("#0000ff"));
+                    }
                 }
                 if(topic.equals("hybrid/dash/charge")) {
                     String charge = String.format("%.0f", data) + "%";
-                    charge_Data.setText(charge);
+                    charge_text.setText(charge);
+                    charge_gauge.setValue((int)data);
+                }
+                if(topic.equals("hybrid/dash/GLVoltage")) {
+                    String voltage = String.format("%.1f", data) + "V";
+                    voltage_gauge.setValue((int)data);
+                    voltage_text.setText(voltage);
+                    if (data>14 || data<10) {
+                        voltage_gauge.setPointStartColor(Color.parseColor("#ff00000"));
+                        voltage_gauge.setPointEndColor(Color.parseColor("#ff0000"));
+                    }
+                    if (data>10.1 && data<13.9) {
+                        voltage_gauge.setPointStartColor(Color.parseColor("#0000ff"));
+                        voltage_gauge.setPointEndColor(Color.parseColor("#0000ff"));
+                    }
                 }
             }
 
