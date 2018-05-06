@@ -10,15 +10,12 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import android.util.Log;
 import android.content.Context;
-import android.provider.Settings;
-
 
 public class MQTTHelper {
     //set basics
     public MqttAndroidClient mqttAndroidClient;
     //default server we used for testing
     public String server_address = "tcp://test.mosquitto.org";
-
     //topic we are listening to through MQTT
     final String subscriptionTopic = "hybrid/#";
     //User/pass weren't aren't being used in our current usage case.

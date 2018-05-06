@@ -89,10 +89,9 @@ public class DangerZone extends AppCompatActivity {
         MQTTHelper helper = new MQTTHelper();
         //passes the MQTT helper object the application context and server address.
 
+        //grabs clientID for starting MQTT
         String client_name = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
         helper.MqttHelper(getApplicationContext(), "tcp://"+server_address, client_name);
-
         helper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
@@ -112,9 +111,10 @@ public class DangerZone extends AppCompatActivity {
                 Log.w("Debug", topic + ": " + data);
 
                 //checks topic from incoming message, then outputs it to the corresponding GUI element
+                //if data is out of spec, change color of arch.
+                //display data on <name>Text
                 if(topic.equals("hybrid/engine/temperature")) {
                     String engine = data + " F";
-                    //sets gauges
                     coolant_gauge.setValue((int)data);
                     coolant_text.setText(engine);
                     if (data>187) {
