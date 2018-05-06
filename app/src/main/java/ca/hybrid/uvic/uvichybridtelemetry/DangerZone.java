@@ -89,18 +89,18 @@ public class DangerZone extends AppCompatActivity {
                     engineTempData.setText(engine);
                 }
                 if(topic.equals("hybrid/engine/TPS")) {
-                    String tps = data + "%";
+                    String tps = String.format("%.0f", data) + "%";
                     throttle_Data.setText(tps);
                 }
                 if(topic.equals("hybrid/engine/AFR")) {
-                    AFR_Data.setText(String.valueOf(String.format("%.0f", data)));
+                    AFR_Data.setText(String.valueOf(String.format("%.1f", data)));
                 }
                 if(topic.equals("hybrid/dash/fuel")) {
-                    String fuel = data + "%";
+                    String fuel = String.format("%.0f", data) + "%";
                     fuel_Data.setText(fuel);
                 }
                 if(topic.equals("hybrid/dash/charge")) {
-                    String charge = data + "%";
+                    String charge = String.format("%.0f", data) + "%";
                     charge_Data.setText(charge);
                 }
 
