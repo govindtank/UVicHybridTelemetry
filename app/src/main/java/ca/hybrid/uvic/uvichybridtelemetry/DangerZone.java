@@ -20,10 +20,16 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import android.util.Log;
 import android.content.Context;
+import java.util.*;
 
 public class DangerZone extends AppCompatActivity {
 
     TextView dataReceived;
+    TextView engineTempData;
+    TextView AFR_Data;
+    TextView throttle_Data;
+    TextView fuel_Data;
+    TextView charge_Data;
 
     public static final String MY_PREFS_NAME = "user_prefs";
 
@@ -36,8 +42,13 @@ public class DangerZone extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Context context = getApplicationContext();
 
-        //MQTT Bullshit
-        dataReceived = (TextView) findViewById(R.id.dataReceived);
+        //Set paths for incoming data.
+        engineTempData = findViewById(R.id.engine_temperature);
+        AFR_Data = findViewById(R.id.AFR);
+        throttle_Data = findViewById(R.id.TPS);
+        fuel_Data = findViewById(R.id.fuel);
+        charge_Data = findViewById(R.id.charge);
+
         startMqtt();
 
 
@@ -72,6 +83,28 @@ public class DangerZone extends AppCompatActivity {
                 float data = Float.parseFloat(payload.substring(payload.lastIndexOf(':') + 1));
                 Log.w("Debug", topic + ": " + data);
                 dataReceived.setText(topic + ": " + data);
+
+                //set incoming data to update in UI.
+                if(topic.equals("hybrid/engine/temperature")) {
+                    String engine = data + " F";
+                    engineTempData.setText(engine);
+                }
+                if(topic.equals("hybrid/engine/TPS")) {
+                    String tps = data + "%";
+                    throttle_Data.setText(tps);
+                }
+                if(topic.equals("hybrid/engine/AFR")) {
+                    AFR_Data.setText(String.valueOf(data));
+                }
+                if(topic.equals("hybrid/dash/fuel")) {
+                    String fuel = data + "%";
+                    fuel_Data.setText(fuel);
+                }
+                if(topic.equals("hybrid/dash/charge")) {
+                    String charge = data + "%";
+                    charge_Data.setText(charge);
+                }
+
             }
 
             @Override
