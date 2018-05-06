@@ -20,7 +20,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import android.util.Log;
 import android.content.Context;
-import java.util.*;
+
 
 public class DangerZone extends AppCompatActivity {
 
@@ -82,7 +82,6 @@ public class DangerZone extends AppCompatActivity {
                 String payload = mqttMessage.toString();
                 float data = Float.parseFloat(payload.substring(payload.lastIndexOf(':') + 1));
                 Log.w("Debug", topic + ": " + data);
-                dataReceived.setText(topic + ": " + data);
 
                 //set incoming data to update in UI.
                 if(topic.equals("hybrid/engine/temperature")) {
