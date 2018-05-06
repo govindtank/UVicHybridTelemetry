@@ -19,11 +19,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import android.util.Log;
-import android.content.Context;
-
 
 public class DangerZone extends AppCompatActivity {
 
+    //place holder spots where incoming data will be stored
+    //then used to set various UI elements, or passed to different classes.
     TextView engineTempData;
     TextView AFR_Data;
     TextView throttle_Data;
@@ -49,9 +49,10 @@ public class DangerZone extends AppCompatActivity {
         fuel_Data = findViewById(R.id.fuel);
         charge_Data = findViewById(R.id.charge);
 
-        //sets prefs and popup for current server.
+        // sets prefs location
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String restoredText = prefs.getString("server", null);
+        //if statement displays popup on startup for current server from prefs.
         if (restoredText != null) {
             int duration = Toast.LENGTH_SHORT;
             Toast.makeText(context, "Server: " + restoredText, duration).show();
@@ -65,7 +66,9 @@ public class DangerZone extends AppCompatActivity {
 
     //starts mqtt
     private void startMqtt(){
+        //creates the MQTT helper object
         MQTTHelper helper = new MQTTHelper();
+        //passes the MQTT helper object the application context and server address.
         helper.MqttHelper(getApplicationContext(), "tcp://"+server_address);
 
         helper.setCallback(new MqttCallbackExtended() {
@@ -81,12 +84,12 @@ public class DangerZone extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                //output message with topic
+                //output message with topic to log
                 String payload = mqttMessage.toString();
                 float data = Float.parseFloat(payload.substring(payload.lastIndexOf(':') + 1));
                 Log.w("Debug", topic + ": " + data);
 
-                //set incoming data to update in UI.
+                //checks topic from incoming message, then outputs it to the corresponding GUI element
                 if(topic.equals("hybrid/engine/temperature")) {
                     String engine = data + " F";
                     engineTempData.setText(engine);
@@ -106,12 +109,10 @@ public class DangerZone extends AppCompatActivity {
                     String charge = String.format("%.0f", data) + "%";
                     charge_Data.setText(charge);
                 }
-
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
             }
         });
     }
@@ -143,14 +144,16 @@ public class DangerZone extends AppCompatActivity {
             alertDialogBuilder.setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
+                            //creates message saying the server is set to "input"
                             int duration = Toast.LENGTH_SHORT;
                             Context context = getApplicationContext();
                             Toast.makeText(context, "Server set to: " + editText.getText(), duration).show();
-
                             SharedPreferences.Editor editor = getSharedPreferences("user_prefs", MODE_PRIVATE).edit();
+                            //places the new server address in prefs
                             editor.putString("server", editText.getText().toString());
                             editor.apply();
+                            //sets public server_address element to newly passed server value
+                            //then restarts MQTT using new server value
                             server_address=editText.getText().toString();
                             startMqtt();
                         }

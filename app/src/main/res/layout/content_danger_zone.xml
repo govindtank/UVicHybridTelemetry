@@ -8,7 +8,6 @@
     tools:context=".DangerZone"
     tools:showIn="@layout/activity_danger_zone">
 
-
     <TextView
         android:id="@+id/charge_label"
         android:layout_width="wrap_content"
