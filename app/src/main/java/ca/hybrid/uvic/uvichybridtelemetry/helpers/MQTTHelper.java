@@ -10,13 +10,15 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import android.util.Log;
 import android.content.Context;
+import android.provider.Settings;
+
 
 public class MQTTHelper {
     //set basics
     public MqttAndroidClient mqttAndroidClient;
     //default server we used for testing
     public String server_address = "tcp://test.mosquitto.org";
-    final String clientId = "ExampleAndroidClient";
+
     //topic we are listening to through MQTT
     final String subscriptionTopic = "hybrid/#";
     //User/pass weren't aren't being used in our current usage case.
@@ -24,7 +26,11 @@ public class MQTTHelper {
     final String password = "";
 
     //helper method, receives incoming context and server_address (from prefs) from DangerZone
-    public void MqttHelper(Context context, String server_address){
+    public void MqttHelper(Context context, String server_address, String client_name){
+
+        // Get a unique client ID for this device when connecting
+        String clientId = client_name + Long.toString(System.currentTimeMillis() / 1000L);
+
         mqttAndroidClient = new MqttAndroidClient(context, server_address, clientId);
         //starts callback process to log connection changes, and incoming data
         //and ultimately call the connect function.

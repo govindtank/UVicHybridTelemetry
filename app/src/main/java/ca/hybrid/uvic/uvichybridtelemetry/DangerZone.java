@@ -1,6 +1,7 @@
 package ca.hybrid.uvic.uvichybridtelemetry;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class DangerZone extends AppCompatActivity {
     TextView throttle_text;
     TextView fuel_text;
     TextView charge_text;
+
     TextView voltage_text;
 
     public String server_address;
@@ -86,7 +88,10 @@ public class DangerZone extends AppCompatActivity {
         //creates the MQTT helper object
         MQTTHelper helper = new MQTTHelper();
         //passes the MQTT helper object the application context and server address.
-        helper.MqttHelper(getApplicationContext(), "tcp://"+server_address);
+
+        String client_name = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        helper.MqttHelper(getApplicationContext(), "tcp://"+server_address, client_name);
 
         helper.setCallback(new MqttCallbackExtended() {
             @Override
