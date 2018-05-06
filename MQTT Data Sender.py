@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt #import the client1
 import time
 
-broker_address="test.mosquitto.org"
+broker_address="localhost"
 client = mqtt.Client()
 client.connect(broker_address)
 
@@ -15,6 +15,9 @@ while(True):
 	client.publish("hybrid/engine/temperature", 170.0 + i * 2.0)
 	client.publish("hybrid/dash/charge", 0 + i * 10.0)
 	client.publish("hybrid/dash/fuel", 100.0 - i * 10.0)
+	client.publish("hybrid/dash/GLVoltage", 10.0 + i * 0.4)
+
+	print("data set sent for iteration value: " + str(i))
 
 	if(going_down == False):
 		i += 0.05
