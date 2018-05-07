@@ -17,7 +17,6 @@ public class MQTTHelper {
     //default server we used for testing
     public String server_address = "tcp://test.mosquitto.org";
     //topic we are listening to through MQTT
-    final String[] subscriptionTopic = new String[] {"hybrid/engine/TPS","hybrid/engine/AFR","hybrid/dash/fuel","hybrid/dash/charge","hybrid/dash/GLVoltage"} ;
     //User/pass weren't aren't being used in our current usage case.
     final String username = "";
     final String password = "";
@@ -79,7 +78,12 @@ public class MQTTHelper {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic();
+                    subscribeToTopic("hybrid/engine/TPS");
+                    subscribeToTopic("hybrid/engine/temperature");
+                    subscribeToTopic("hybrid/engine/AFR");
+                    subscribeToTopic("hybrid/dash/fuel");
+                    subscribeToTopic("hybrid/dash/charge");
+                    subscribeToTopic("hybrid/dash/GLVoltage");
                 }
 
                 @Override
@@ -103,9 +107,9 @@ public class MQTTHelper {
     //current topics, from that box you could have an + button to add, and a remove button
     //beside each currently subscribed topic.
 
-    private void subscribeToTopic() {
+    private void subscribeToTopic(String topic) {
         try {
-            mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
+            mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.w("MQTT","Subscribed!");

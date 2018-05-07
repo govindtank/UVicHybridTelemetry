@@ -20,13 +20,13 @@ while(True):
 	print("data set sent for iteration value: " + str(i))
 
 	if(going_down == False):
-		i += 0.05
+		i += 0.001
 	else:
-		i -= 0.05
+		i -= 0.001
 
 	if(i >= 10):
 		going_down = True
 	if(i <= 0):
 		going_down = False
 
-	time.sleep(0.1)
+	time.sleep(0.05)
