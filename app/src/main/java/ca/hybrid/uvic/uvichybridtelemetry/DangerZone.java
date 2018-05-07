@@ -114,7 +114,7 @@ public class DangerZone extends AppCompatActivity {
                 //if data is out of spec, change color of arch.
                 //display data on <name>Text
                 if(topic.equals("hybrid/engine/temperature")) {
-                    String engine = data + " F";
+                    String engine = String.format("%.1f F", data);
                     coolant_gauge.setValue((int)data);
                     coolant_text.setText(engine);
                     if (data>187) {
